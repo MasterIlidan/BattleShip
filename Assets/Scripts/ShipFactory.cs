@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,7 @@ using UnityEngine.Serialization;
 public class ShipFactory : MonoBehaviour
 {
     private int _count;
+    
     [FormerlySerializedAs("ShipsCount")] public int shipsCount;
     
     public int Count
@@ -29,6 +31,7 @@ public class ShipFactory : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        
         Count = shipsCount;
         //uiText.GetComponent<TextMeshPro>().SetText(Count.ToString());
         
@@ -41,13 +44,12 @@ public class ShipFactory : MonoBehaviour
             return;
         }
         Count--;
-        Instantiate(shipPrefab, transform.position, Quaternion.identity);
+        char randomLetter = (char) UnityEngine.Random.Range('A', 'K');
+        int randomNumber = UnityEngine.Random.Range(1, 11);
+        GameObject obj = Instantiate(shipPrefab, 
+            GameObject.Find(randomLetter.ToString()+randomNumber.ToString()).transform.position, 
+            Quaternion.identity);
         print("Ship SPAWNED");
-        StartCoroutine(Waiter());
     }
-
-    IEnumerator Waiter()
-    {
-        yield return new WaitForSeconds(2);
-    }
+    
 }
