@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 public class CaterScript : MonoBehaviour
-{ [FormerlySerializedAs("_colliders")] public List<String> shipTilesList = new List<String>();
-    public List<String> shipCollisions = new List<String>();
+{ [FormerlySerializedAs("_colliders")] public List<string> shipTilesList = new List<string>();
+    public List<string> shipCollisions = new List<string>();
     public int ShipSize;
     public void OnMouseDrag()
     {

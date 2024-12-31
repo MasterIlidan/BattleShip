@@ -6,7 +6,7 @@ public class TileClickHandler : MonoBehaviour
 {
     
 
-    public void OnTileClicked(String name)
+    public void OnTileClicked(string name)
     {
         print("tile clicked " + name);
     }

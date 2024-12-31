@@ -7,7 +7,7 @@ public class NewEmptyCSharpScript : MonoBehaviour
     private GameObject _gameObject;
     private Ray _ray;
     private RaycastHit _hit;
-    static readonly List<String> Tiles = InitTilesList();
+    static readonly List<string> Tiles = InitTilesList();
     void Start()
     {
         /*_gameObject = GameObject.FindGameObjectWithTag("GameController");
@@ -36,9 +36,9 @@ public class NewEmptyCSharpScript : MonoBehaviour
         }*/
     }
 
-    private static List<String> InitTilesList()
+    private static List<string> InitTilesList()
     {
-        List<String> tiles = new List<String>();
+        List<string> tiles = new List<string>();
         char letter = 'A';
         for (int i = 1; i <= 10; i++)
         {
