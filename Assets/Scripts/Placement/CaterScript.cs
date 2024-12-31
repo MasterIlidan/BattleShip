@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 public class CaterScript : MonoBehaviour
 { [FormerlySerializedAs("_colliders")] public List<String> shipTilesList = new List<String>();
     public List<String> shipCollisions = new List<String>();
+    public int ShipSize;
     public void OnMouseDrag()
     {
         //если курсор на поле, то корабль привязывается к полю. Если нет, то сдедует за курсором
@@ -27,6 +28,11 @@ public class CaterScript : MonoBehaviour
         print("OnMouseUp");
     }
 
+    private void OnMouseDown()
+    {
+        GameObject.Find("RotateButtonSwitch").SendMessage("ChangeActiveShip", gameObject);
+    }
+
     void OnTriggerExit2D(Collider2D collision)
     {
         print("ship exit tile " + collision.gameObject.name);
@@ -37,6 +43,15 @@ public class CaterScript : MonoBehaviour
     {
         print("ship collide with " + collision.gameObject.name);
         shipTilesList.Add(collision.gameObject.name);
+    }
+
+    void SendTileData()
+    {
+        if (shipTilesList.Count != ShipSize)
+        {
+            Debug.LogWarning(name + " ship tile list size is not equal to ShipSize. Tiles: " + shipTilesList + ", size: " + ShipSize);
+            return;
+        }
     }
     
 }

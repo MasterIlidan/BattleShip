@@ -46,9 +46,10 @@ public class ShipFactory : MonoBehaviour
         Count--;
         char randomLetter = (char) UnityEngine.Random.Range('A', 'K');
         int randomNumber = UnityEngine.Random.Range(1, 11);
-        GameObject obj = Instantiate(shipPrefab, 
+        GameObject newShip = Instantiate(shipPrefab, 
             GameObject.Find(randomLetter.ToString()+randomNumber.ToString()).transform.position, 
             Quaternion.identity);
+        newShip.transform.SetParent(GameObject.Find("Ships").transform);
         print("Ship SPAWNED");
     }
     
