@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Placement
 {
     public class PlacementScript : MonoBehaviour
     {
-        public Dictionary<string, Ship> PlacedShips = new Dictionary<string, Ship>();
-        
+        public Dictionary<string, Ship> PlacedShips = new();
     
         public void OnClickStartGame()
         {
@@ -20,13 +17,17 @@ namespace Placement
         void OnPrepareGameStart()
         {
             GameObject[] ships = GameObject.FindGameObjectsWithTag("Ship");
-            foreach (GameObject ship in ships)
+            foreach (var ship in ships)
             {
-                var shipSize = ship.GetComponent<CaterScript>().shipSize;
+                var shipSize = ship.GetComponent<CaterScript>().ShipSize;
                 var tiles = ship.GetComponent<CaterScript>().shipTilesList;
-                if (tiles.Count != shipSize) throw new Exception("Ship size mismatch Must");
-                string shipName;
-                switch (shipSize)
+                var shipName = ship.name;
+                if (tiles.Count != shipSize)
+                    throw new ArgumentException("Ship size mismatch Value: "
+                                                + tiles.Count + " Expected: "
+                                                + shipSize);
+
+                /*switch (shipSize)
                 {
                     case 1:
                     {
@@ -50,21 +51,20 @@ namespace Placement
                     }
                     default: throw new ArgumentOutOfRangeException(nameof(shipSize), "Illegal ship size: " + shipSize + " in " + ship.name);
                 }
+                */
                 foreach (var tile in tiles)
                 {
                     shipName += tile;
                 }
+
                 print("Received tiles " + shipSize + ", ship size " + shipSize);
                 var newShip = new Ship(shipName, shipSize);
                 foreach (var tile in tiles)
                 {
-                    PlacedShips.Add(tile,newShip);
+                    PlacedShips.Add(tile, newShip);
                 }
             }
-            
-        
         }
-        
     }
 
     public class Ship
