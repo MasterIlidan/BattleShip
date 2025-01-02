@@ -8,6 +8,8 @@ using UnityEngine.Serialization;
 public class ShipFactory : MonoBehaviour
 {
     private int _count;
+    public string ShipName;
+    private int _counter = 1;
     
     [FormerlySerializedAs("ShipsCount")] public int shipsCount;
     
@@ -49,6 +51,7 @@ public class ShipFactory : MonoBehaviour
         GameObject newShip = Instantiate(shipPrefab, 
             GameObject.Find(randomLetter.ToString()+randomNumber.ToString()).transform.position, 
             Quaternion.identity);
+        newShip.name = ShipName + _counter++;
         newShip.transform.SetParent(GameObject.Find("Ships").transform);
         print("Ship SPAWNED");
     }
