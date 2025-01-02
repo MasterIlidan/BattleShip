@@ -1,3 +1,4 @@
+using Placement;
 using UnityEngine;
 
 public class RotateShip : MonoBehaviour
@@ -21,7 +22,7 @@ public class RotateShip : MonoBehaviour
 
     public void OnClick()
     {
-        ship.transform.Rotate(0f, 0f,90f);
+        ship.GetComponent<CaterScript>().OnRotate();
     }
     
     //При клике на корабль посылается сообщение в объект RotateButtonSwitch

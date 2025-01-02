@@ -36,6 +36,11 @@ namespace Placement
             _statusSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
             _statusSprite.color = new Color(0f, 0.3f, 01f, 0.5f);
         }
+        
+        public void OnRotate()
+        {
+            transform.Rotate(0f, 0f,90f);
+        }
 
         private void OnMouseUp()
         {
