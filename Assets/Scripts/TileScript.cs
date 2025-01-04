@@ -8,12 +8,12 @@ public class TileScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        print("Collision with " + other.gameObject.name);
+        //print("Collision with " + other.gameObject.name);
     }
 
 
     public void OnMouseDown()
     {
-        print("Tile clicked "+name);
+        //print("Tile clicked "+name);
     }
 }

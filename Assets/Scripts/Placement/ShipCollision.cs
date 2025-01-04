@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShipCollision : MonoBehaviour
@@ -6,7 +5,7 @@ public class ShipCollision : MonoBehaviour
     
     private void OnTriggerStay2D(Collider2D collision)
     {
-        print(name + " OnCollisionEnter with " + collision.gameObject.name);
+        //print(name + " OnCollisionEnter with " + collision.gameObject.name);
         if (!collision.gameObject.CompareTag("Tiles") && !collision.gameObject.CompareTag("Ship Collision"))
         {
             GetComponent<SpriteRenderer>().color = Color.red;
@@ -20,7 +19,7 @@ public class ShipCollision : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        print(name + " OnCollisionExit with " + collision.gameObject.name);
+        //print(name + " OnCollisionExit with " + collision.gameObject.name);
         GetComponent<SpriteRenderer>().color = Color.white;
     }
 }
