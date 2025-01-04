@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Mono.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -50,7 +48,7 @@ namespace Placement
             int colliderCount = GetComponent<Rigidbody2D>().GetContacts(col);
             
             
-            if (colliderCount != ShipSize)
+            if (colliderCount != ShipSize || shipTilesList.Count != ShipSize)
             {
                 shipTilesList.Clear();
                 print("ship size " + ShipSize + " and colliders " + colliderCount +" mismatch");
@@ -101,7 +99,8 @@ namespace Placement
         {
             if (!IsMoving) return;
             //print("ship collide with " + collision.gameObject.name);
-            if (collision.gameObject.CompareTag("Tiles"))
+            if (!collision.gameObject.CompareTag("Tiles")) return;
+            if (!shipTilesList.Contains(collision.gameObject.name))
             {
                 shipTilesList.Add(collision.gameObject.name);
             }
@@ -115,6 +114,13 @@ namespace Placement
                 collision.gameObject.CompareTag("Ship Collision"))
             {
                 _statusSprite.color = new Color(1f, 0f, 0f, 0.5f);
+                return;
+            }
+
+            if (!collision.gameObject.CompareTag("Tiles")) return;
+            if (!shipTilesList.Contains(collision.gameObject.name))
+            {
+                shipTilesList.Add(collision.gameObject.name);
             }
         }
     
