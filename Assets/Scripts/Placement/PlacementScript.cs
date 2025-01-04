@@ -1,17 +1,31 @@
 using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Placement
 {
     public class PlacementScript : MonoBehaviour
     {
         public Dictionary<string, Ship> PlacedShips = new();
-    
+        //public BattleStartEvent BattleStartEvent;
+        public UnityEvent<Dictionary<string,Ship>> BattleStartEvent;
+
+        public void OnEnable()
+        {
+            BattleStartEvent.AddListener(
+                GameObject
+                    .FindGameObjectWithTag("GameController")
+                    .GetComponent<GameManager>()
+                    .OnPrepareBattle);
+        }
+
         public void OnClickStartGame()
         {
             PlacedShips.Clear();
             OnPrepareGameStart();
+            BattleStartEvent.Invoke(PlacedShips);
         }
 
         void OnPrepareGameStart()
@@ -23,7 +37,7 @@ namespace Placement
                 var tiles = ship.GetComponent<CaterScript>().shipTilesList;
                 var shipName = ship.name;
                 if (tiles.Count != shipSize)
-                    throw new ArgumentException("Ship size mismatch Value: "
+                    throw new ArgumentException("Ship size mismatch in ship: "+ ship.name+ " Value: "
                                                 + tiles.Count + " Expected: "
                                                 + shipSize);
 
@@ -67,11 +81,15 @@ namespace Placement
         }
     }
 
+    public class BattleStartEvent : UnityEvent<Dictionary<string, Ship>>
+    {
+    }
+
     public class Ship
     {
-        private string _name;
-        private int _shipSize;
-        private int _hitPoints;
+        private string _name { get; }
+        private int _shipSize { get; }
+        private int _hitPoints { get; set; }
 
         public Ship(string name, int shipSize)
         {
