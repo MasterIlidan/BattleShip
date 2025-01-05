@@ -11,7 +11,7 @@ namespace DefaultNamespace
     {
         [SerializeField]
         public StateMachine _stateMachine;
-        public UnityEvent OnStateChanged;
+        public UnityEvent<GameState> OnStateChanged;
         public UnityEvent<Vector3> OnCameraPosChanged;
         
         public Dictionary<string, Ship> playerShips; 
@@ -33,26 +33,26 @@ namespace DefaultNamespace
                 {
                     print("Main Menu");
                     //OnCameraPosChanged.Invoke(cameraPosition);
-                    OnStateChanged?.Invoke();
+                    OnStateChanged?.Invoke(GameState.MAINMENU);
                     break;
                 }
                 case GameState.PLACEMENT:
                 {
                     print("Placement");
                     OnCameraPosChanged?.Invoke(new Vector3(-29f, 0f, -10f));
-                    OnStateChanged?.Invoke();
+                    OnStateChanged?.Invoke(GameState.PLACEMENT);
                     break;
                 }
                 case GameState.BATTLE:
                 {
                     print("Battle");
                     OnCameraPosChanged?.Invoke(new Vector3(0f, 0f, -10f));
-                    OnStateChanged?.Invoke();
+                    OnStateChanged?.Invoke(GameState.BATTLE);
                     break;
                 }
                 case GameState.ENDGAME:
                 {
-                    OnStateChanged?.Invoke();
+                    OnStateChanged?.Invoke(GameState.ENDGAME);
                     print("End Game");
                     break;
                 }
