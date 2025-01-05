@@ -9,8 +9,10 @@ namespace Placement
     public class PlacementScript : MonoBehaviour
     {
         public Dictionary<string, Ship> PlacedShips = new();
+
         //public BattleStartEvent BattleStartEvent;
-        public UnityEvent<Dictionary<string,Ship>> BattleStartEvent;
+        public UnityEvent<Dictionary<string, Ship>> BattleStartEvent;
+        [SerializeField] public GameObject shipPrefab;
 
         public void OnEnable()
         {
@@ -37,7 +39,7 @@ namespace Placement
                 var tiles = ship.GetComponent<CaterScript>().shipTilesList;
                 var shipName = ship.name;
                 if (tiles.Count != shipSize)
-                    throw new ArgumentException("Ship size mismatch in ship: "+ ship.name+ " Value: "
+                    throw new ArgumentException("Ship size mismatch in ship: " + ship.name + " Value: "
                                                 + tiles.Count + " Expected: "
                                                 + shipSize);
 
@@ -70,7 +72,7 @@ namespace Placement
                 {
                     shipName += tile;
                 }
-
+                //TODO: выдает ошибку при дальнейшей привзяке к событиям
                 print("Received tiles " + shipSize + ", ship size " + shipSize);
                 var newShip = new Ship(shipName, shipSize);
                 foreach (var tile in tiles)
@@ -83,19 +85,5 @@ namespace Placement
 
     public class BattleStartEvent : UnityEvent<Dictionary<string, Ship>>
     {
-    }
-
-    public class Ship
-    {
-        private string _name { get; }
-        private int _shipSize { get; }
-        private int _hitPoints { get; set; }
-
-        public Ship(string name, int shipSize)
-        {
-            _name = name;
-            _shipSize = shipSize;
-            _hitPoints = shipSize;
-        }
     }
 }
