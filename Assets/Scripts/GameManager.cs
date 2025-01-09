@@ -14,12 +14,16 @@ namespace DefaultNamespace
         public UnityEvent<GameState> OnStateChanged;
         public UnityEvent<Vector3> OnCameraPosChanged;
         
-        public Dictionary<string, Ship> playerShips; 
+        //public Dictionary<string, Ship> playerShips; 
         //public DefaultNamespace.Statee State = DefaultNamespace.Statee.Start;
         void Start()
         {
             //TODO: временно PLACEMENT, должно быть MAINMENU
             OnStateSwitch(GameState.PLACEMENT);
+            GameObject
+                .FindGameObjectWithTag("Placement Controller")
+                .GetComponent<PlacementScript>()
+                .BattleStartEvent.AddListener(OnPrepareBattle);
         }
 
         
@@ -46,8 +50,7 @@ namespace DefaultNamespace
                 case GameState.BATTLE:
                 {
                     print("Battle");
-                    OnCameraPosChanged?.Invoke(new Vector3(0f, 0f, -10f));
-                    OnStateChanged?.Invoke(GameState.BATTLE);
+                    OnCameraPosChanged?.Invoke(new Vector3(0f, 0f, -10f)); OnStateChanged?.Invoke(GameState.BATTLE);
                     break;
                 }
                 case GameState.ENDGAME:
@@ -66,7 +69,7 @@ namespace DefaultNamespace
         public void OnPrepareBattle(Dictionary <string, Ship> ships)
         {
             print("Prepare Battle");
-            playerShips = ships;
+            //playerShips = ships;
             OnStateSwitch(GameState.BATTLE);
         }
     }

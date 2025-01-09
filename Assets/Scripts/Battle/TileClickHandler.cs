@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class TileClickHandler : MonoBehaviour
 {
-    public UnityEvent<string> OnTileClickedEvent;
+    public UnityEvent<GameObject> OnTileClickedEvent;
     private void OnEnable()
     {
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnStateChanged.AddListener(Subscribe);
@@ -38,9 +38,9 @@ public class TileClickHandler : MonoBehaviour
         }
     }
 
-    public void OnTileClicked(string name)
+    public void OnTileClicked(GameObject tile)
     {
-        print("tile clicked " + name);
-        OnTileClickedEvent.Invoke(name);
+        print("tile clicked " + tile.name);
+        OnTileClickedEvent.Invoke(tile);
     }
 }

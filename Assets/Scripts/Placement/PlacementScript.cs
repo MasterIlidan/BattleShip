@@ -12,16 +12,11 @@ namespace Placement
 
         //public BattleStartEvent BattleStartEvent;
         public UnityEvent<Dictionary<string, Ship>> BattleStartEvent;
-        [SerializeField] public GameObject shipPrefab;
-
-        public void OnEnable()
-        {
-            BattleStartEvent.AddListener(
-                GameObject
-                    .FindGameObjectWithTag("GameController")
-                    .GetComponent<GameManager>()
-                    .OnPrepareBattle);
-        }
+        [SerializeField] public GameObject One;
+        [SerializeField] public GameObject Double;
+        [SerializeField] public GameObject Triple;
+        [SerializeField] public GameObject Quadro;
+        
 
         public void OnClickStartGame()
         {
@@ -33,6 +28,9 @@ namespace Placement
         void OnPrepareGameStart()
         {
             GameObject[] ships = GameObject.FindGameObjectsWithTag("Ship");
+            
+            Vector3 difference = new Vector3(37.023f, 0f, 0f);
+            
             foreach (var ship in ships)
             {
                 var shipSize = ship.GetComponent<CaterScript>().ShipSize;
@@ -42,43 +40,42 @@ namespace Placement
                     throw new ArgumentException("Ship size mismatch in ship: " + ship.name + " Value: "
                                                 + tiles.Count + " Expected: "
                                                 + shipSize);
-
-                /*switch (shipSize)
+                GameObject prefab;
+                switch (shipSize)
                 {
                     case 1:
                     {
-                        shipName = "One";
+                        prefab = One;
                         break;
                     }
                     case 2:
                     {
-                        shipName = "Double";
+                        prefab = Double;
                         break;
                     }
                     case 3:
                     {
-                        shipName = "Triple";
+                        prefab = Triple;
                         break;
                     }
                     case 4:
                     {
-                        shipName = "Quadro";
+                        prefab = Quadro;
                         break;
                     }
                     default: throw new ArgumentOutOfRangeException(nameof(shipSize), "Illegal ship size: " + shipSize + " in " + ship.name);
                 }
-                */
                 foreach (var tile in tiles)
                 {
                     shipName += tile;
                 }
-                //TODO: выдает ошибку при дальнейшей привзяке к событиям
-                print("Received tiles " + shipSize + ", ship size " + shipSize);
+                Instantiate(prefab, ship.transform.position + difference, ship.transform.rotation).transform.SetParent(GameObject.Find("PlayerField").transform);
+                /*print("Received tiles " + shipSize + ", ship size " + shipSize);
                 var newShip = new Ship(shipName, shipSize);
                 foreach (var tile in tiles)
                 {
                     PlacedShips.Add(tile, newShip);
-                }
+                }*/
             }
         }
     }

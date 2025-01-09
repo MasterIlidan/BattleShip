@@ -35,7 +35,6 @@ public class NewEmptyCSharpScript : MonoBehaviour
             firstTilVector3.x += 0.53f;
         }*/
     }
-
     private static List<string> InitTilesList()
     {
         List<string> tiles = new List<string>();
