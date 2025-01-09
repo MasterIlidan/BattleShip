@@ -41,26 +41,33 @@ public class Ship : MonoBehaviour
         if (isPlayerTurn)
         {
             _hitPoints--;
-            if (_hitPoints == 0)
+            if (_hitPoints != 0)
             {
                 print("You hit the ship!");
                 hitObject.GetComponent<SpriteRenderer>().enabled = true;
                 hitObject.GetComponent<BoxCollider2D>().enabled = false;
-                OnShipDestroyed.Invoke(this);
+                OnShipDamaged.Invoke();
                 return;
             }
             print("Ship destroyed");
             hitObject.transform.parent.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
-            OnShipDamaged.Invoke();
+            OnShipDestroyed.Invoke(this);
             return;
         }
         print("not player turn");
     }
-    public void setup(string name , int shipSize)
+    public void setup(Ship shipScript)
+    {
+        _name = shipScript._name;
+        _shipSize = shipScript._shipSize;
+        _hitPoints = _shipSize;
+    }
+
+    public void setup(string name, int shipSize)
     {
         _name = name;
         _shipSize = shipSize;
-        _hitPoints = shipSize;
+        _hitPoints = _shipSize;
     }
         
 }

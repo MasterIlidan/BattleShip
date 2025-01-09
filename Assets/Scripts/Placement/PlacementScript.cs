@@ -16,7 +16,7 @@ namespace Placement
         [SerializeField] public GameObject Double;
         [SerializeField] public GameObject Triple;
         [SerializeField] public GameObject Quadro;
-        
+
 
         public void OnClickStartGame()
         {
@@ -28,9 +28,9 @@ namespace Placement
         void OnPrepareGameStart()
         {
             GameObject[] ships = GameObject.FindGameObjectsWithTag("Ship");
-            
-            Vector3 difference = new Vector3(37.023f, 0f, 0f);
-            
+
+            Vector3 difference = new Vector3(-37.0063f, 0.066f, 0f);
+
             foreach (var ship in ships)
             {
                 var shipSize = ship.GetComponent<CaterScript>().ShipSize;
@@ -63,20 +63,55 @@ namespace Placement
                         prefab = Quadro;
                         break;
                     }
-                    default: throw new ArgumentOutOfRangeException(nameof(shipSize), "Illegal ship size: " + shipSize + " in " + ship.name);
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(shipSize),
+                            "Illegal ship size: " + shipSize + " in " + ship.name);
                 }
+
                 foreach (var tile in tiles)
                 {
                     shipName += tile;
                 }
-                Instantiate(prefab, ship.transform.position + difference, ship.transform.rotation).transform.SetParent(GameObject.FindGameObjectWithTag("Player Ships").transform);
-                /*print("Received tiles " + shipSize + ", ship size " + shipSize);
-                var newShip = new Ship(shipName, shipSize);
-                foreach (var tile in tiles)
-                {
-                    PlacedShips.Add(tile, newShip);
-                }*/
+
+                GameObject newShip = Instantiate(prefab,
+                    ship.transform.position - difference,
+                    ship.transform.rotation);
+                newShip.transform.SetParent(GameObject.FindGameObjectWithTag("Player Ships").transform);
+                newShip.name = shipName;
+
+                Ship newShipScript = newShip.GetComponent<Ship>();
+                CaterScript caterScript = ship.GetComponent<CaterScript>();
+
+                newShipScript.setup(shipName, caterScript.ShipSize);
             }
+
+            SetEnemyShips();
+        }
+
+        private void SetEnemyShips()
+        {
+            Vector3 offset = new Vector3(7.996694f, 0f, 0f);
+            GameObject playerShips = GameObject.FindGameObjectWithTag("Player Ships");
+            GameObject enemyShips = GameObject.FindGameObjectWithTag("Enemy Ships");
+
+            for (int i = 0; i < playerShips.transform.childCount; i++)
+            {
+                GameObject playerShip = playerShips.transform.GetChild(i).gameObject;
+                Ship playerShipScript = playerShip.GetComponent<Ship>();
+
+
+                GameObject enemyShip = Instantiate(playerShip,
+                    playerShip.transform.position - offset,
+                    Quaternion.identity);
+                //enemyShip.SetActive(false);
+                enemyShip.GetComponent<Ship>().setup(playerShipScript);
+                print("copy player ship " + enemyShip.name + " to enemy field");
+
+                enemyShip.transform.SetParent(enemyShips.transform);
+                //enemyShip.SetActive(true);
+            }
+
+            enemyShips.transform.rotation = new Quaternion(0f, 0f, 90f, 0f);
         }
     }
 
