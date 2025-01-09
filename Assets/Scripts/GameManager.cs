@@ -70,6 +70,8 @@ namespace DefaultNamespace
         {
             print("Prepare Battle");
             //playerShips = ships;
+            //TODO: временное копирование всего расположения кораблей игрока как 
+            
             OnStateSwitch(GameState.BATTLE);
         }
     }

@@ -69,7 +69,7 @@ namespace Placement
                 {
                     shipName += tile;
                 }
-                Instantiate(prefab, ship.transform.position + difference, ship.transform.rotation).transform.SetParent(GameObject.Find("PlayerField").transform);
+                Instantiate(prefab, ship.transform.position + difference, ship.transform.rotation).transform.SetParent(GameObject.FindGameObjectWithTag("Player Ships").transform);
                 /*print("Received tiles " + shipSize + ", ship size " + shipSize);
                 var newShip = new Ship(shipName, shipSize);
                 foreach (var tile in tiles)
