@@ -39,8 +39,7 @@ public class BattleController : MonoBehaviour
         }
         tile.GetComponent<BoxCollider2D>().enabled = false;
         tile.GetComponent<SpriteRenderer>().enabled = true;
-        isPlayerTurn = !isPlayerTurn;
-        OnChangeTurn.Invoke(isPlayerTurn);
+        ChangeTurn();
     }
 
     void OnStateChanged(GameState newState)
@@ -65,6 +64,12 @@ public class BattleController : MonoBehaviour
             ship.OnShipDamaged.AddListener(OnShipDamaged);
         }
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnStateChanged.AddListener(OnStateChanged);
+    }
+
+    public void ChangeTurn()
+    {
+        isPlayerTurn = !isPlayerTurn;
+        OnChangeTurn.Invoke(isPlayerTurn);
     }
 
     private void OnShipDestroyed(Ship ship)

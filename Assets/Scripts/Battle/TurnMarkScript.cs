@@ -5,8 +5,8 @@ public class TurnMarkScript : MonoBehaviour
 {
     private Vector2[] markPos =
     {
-        new Vector2(4, 4.88f),
         new Vector2(-4, 4.88f),
+        new Vector2(4, 4.88f)
     };
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
