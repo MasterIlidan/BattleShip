@@ -14,6 +14,7 @@ namespace DefaultNamespace
         public UnityEvent<GameState> OnStateChanged;
         public UnityEvent<Vector3> OnCameraPosChanged;
         
+        BattleController.Winner _winner;
         //public Dictionary<string, Ship> playerShips; 
         //public DefaultNamespace.Statee State = DefaultNamespace.Statee.Start;
         void Start()
@@ -24,6 +25,10 @@ namespace DefaultNamespace
                 .FindGameObjectWithTag("Placement Controller")
                 .GetComponent<PlacementScript>()
                 .BattleStartEvent.AddListener(OnPrepareBattle);
+            GameObject
+                .FindGameObjectWithTag("Battle Controller")
+                .GetComponent<BattleController>()
+                .OnGameOverEvent.AddListener(OnGameOver);
         }
 
         
@@ -36,7 +41,7 @@ namespace DefaultNamespace
                 case GameState.MAINMENU:
                 {
                     print("Main Menu");
-                    //OnCameraPosChanged.Invoke(cameraPosition);
+                    OnCameraPosChanged.Invoke(new Vector3(-58f, 0f, -10f));
                     OnStateChanged?.Invoke(GameState.MAINMENU);
                     break;
                 }
@@ -50,11 +55,13 @@ namespace DefaultNamespace
                 case GameState.BATTLE:
                 {
                     print("Battle");
-                    OnCameraPosChanged?.Invoke(new Vector3(0f, 0f, -10f)); OnStateChanged?.Invoke(GameState.BATTLE);
+                    OnCameraPosChanged?.Invoke(new Vector3(0f, 0f, -10f)); 
+                    OnStateChanged?.Invoke(GameState.BATTLE);
                     break;
                 }
                 case GameState.ENDGAME:
                 {
+                    OnCameraPosChanged?.Invoke(new Vector3(29f, 0f, -10f));
                     OnStateChanged?.Invoke(GameState.ENDGAME);
                     print("End Game");
                     break;
@@ -66,13 +73,19 @@ namespace DefaultNamespace
             }
         }
 
-        public void OnPrepareBattle(Dictionary <string, Ship> ships)
+        public void OnPrepareBattle(List<Ship> ships)
         {
             print("Prepare Battle");
             //playerShips = ships;
             //TODO: временное копирование всего расположения кораблей игрока как 
             
             OnStateSwitch(GameState.BATTLE);
+        }
+
+        private void OnGameOver(BattleController.Winner winner)
+        {
+            print("Game Over");
+            OnStateSwitch(GameState.ENDGAME);
         }
     }
 
