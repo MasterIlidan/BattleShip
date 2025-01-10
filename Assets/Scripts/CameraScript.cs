@@ -6,7 +6,7 @@ public class CameraScript : MonoBehaviour
     [SerializeField] public Vector3 cameraPos; // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        cameraPos = new(-58f, 0f, -10f);;
+        cameraPos = new(-58f, 0f, -10f);
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnCameraPosChanged.AddListener(SetNewCameraPos);
     }
 
