@@ -8,11 +8,11 @@ public class Ship : MonoBehaviour
     private int _shipSize { get; set; }
 
     private bool isPlayerTurn;
-    private bool isPlayerShip;
+    public bool isPlayerShip { get; private set; }
     private int _hitPoints { get; set; }
 
     public UnityEvent<Ship> OnShipDestroyed;
-    public UnityEvent OnShipDamaged;
+    public UnityEvent<Ship> OnShipDamaged;
     public Ship(string name, int shipSize)
     {
         _name = name;
@@ -37,21 +37,22 @@ public class Ship : MonoBehaviour
         this.isPlayerTurn = isPlayerTurn;
     }
 
-    public void OnHit(GameObject hitObject)
+    public void OnHit(ShipHitScript hitObject)
     {
         if (isPlayerTurn)
         {
             _hitPoints--;
+            hitObject.isHitFlag = true;
             if (_hitPoints != 0)
             {
                 print("You hit the ship!");
-                hitObject.GetComponent<SpriteRenderer>().enabled = true;
-                hitObject.GetComponent<BoxCollider2D>().enabled = false;
-                OnShipDamaged.Invoke();
+                hitObject.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+                hitObject.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+                OnShipDamaged.Invoke(this);
                 return;
             }
             print("Ship destroyed");
-            hitObject.transform.parent.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+            hitObject.gameObject.transform.parent.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
             OnShipDestroyed.Invoke(this);
             return;
         }

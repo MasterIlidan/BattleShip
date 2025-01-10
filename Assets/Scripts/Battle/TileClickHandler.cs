@@ -10,7 +10,7 @@ public class TileClickHandler : MonoBehaviour
     public UnityEvent<GameObject> OnTileClickedEvent;
     private void OnEnable()
     {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnStateChanged.AddListener(Subscribe);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnStateChanged.AddListener(SubscribeOnTileClick);
         /*GameObject[] tiles = GameObject.FindGameObjectsWithTag("Tiles");
         foreach (var tile in tiles)
         {
@@ -18,7 +18,7 @@ public class TileClickHandler : MonoBehaviour
         }*/
     }
 
-    public void Subscribe(GameState state)
+    private void SubscribeOnTileClick(GameState state)
     {
         if (state != GameState.BATTLE) return;
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("Tiles");
@@ -30,7 +30,7 @@ public class TileClickHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnStateChanged.RemoveListener(Subscribe);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnStateChanged.RemoveListener(SubscribeOnTileClick);
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("Tiles");
         foreach (var tile in tiles)
         {
@@ -38,7 +38,7 @@ public class TileClickHandler : MonoBehaviour
         }
     }
 
-    public void OnTileClicked(GameObject tile)
+    private void OnTileClicked(GameObject tile)
     {
         print("tile clicked " + tile.name);
         OnTileClickedEvent.Invoke(tile);

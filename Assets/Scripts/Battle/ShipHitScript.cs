@@ -3,16 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class ShipHitScript : MonoBehaviour
 {
-    public UnityEvent<GameObject> OnHitEvent;
-    
-    void OnMouseDown()
+    public UnityEvent<ShipHitScript> OnHitEvent;
+    public bool isHitFlag = false;
+    private void OnMouseDown()
     {
-        OnHitEvent.Invoke(gameObject);
+        OnShipDamage();
+    }
+
+    public void OnShipDamage()
+    {
+        if (isHitFlag)
+        {
+            Debug.LogWarning("Attempting to hit damaged ship part");
+            return;
+        }
+        //isHitFlag = true;
+        OnHitEvent.Invoke(this);
     }
 
     private void OnEnable()
@@ -40,14 +52,5 @@ public class ShipHitScript : MonoBehaviour
              };
          }
     }
-    //отключить клетки под кораблем
-    /*public void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Tiles"))
-        {
-            other.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-            print("OnTriggerStay tile under ship disabled " + other.gameObject.name);
-        }
-    }*/
     
 }

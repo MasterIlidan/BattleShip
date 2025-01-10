@@ -8,10 +8,10 @@ namespace Placement
 {
     public class PlacementScript : MonoBehaviour
     {
-        public Dictionary<string, Ship> PlacedShips = new();
+        public List<Ship> PlacedShips = new();
 
         //public BattleStartEvent BattleStartEvent;
-        public UnityEvent<Dictionary<string, Ship>> BattleStartEvent;
+        public UnityEvent<List<Ship>> BattleStartEvent;
         [SerializeField] public GameObject One;
         [SerializeField] public GameObject Double;
         [SerializeField] public GameObject Triple;
