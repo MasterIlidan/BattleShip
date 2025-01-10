@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
 
     public void OnRestartGameButtonClicked()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     
     private void SetWinner(BattleController.Winner winner)

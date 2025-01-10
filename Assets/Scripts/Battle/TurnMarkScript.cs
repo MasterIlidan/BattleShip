@@ -6,8 +6,8 @@ namespace Battle
     {
         private readonly Vector2[] _markPos =
         {
-            new Vector2(-4, 4.88f),
-            new Vector2(4, 4.88f)
+            new Vector2(-4, 3.88f),
+            new Vector2(4, 3.88f)
         };
 
         void OnEnable()

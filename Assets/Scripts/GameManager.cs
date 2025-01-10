@@ -8,17 +8,16 @@ using StateMachine = DefaultNamespace.StateMachine;
 
 public class GameManager : MonoBehaviour
 {
-    private StateMachine _stateMachine;
+    public StateMachine stateMachine;
     public UnityEvent<GameState> onStateChanged;
     public UnityEvent<Vector3> onCameraPosChanged;
-        
-    BattleController.Winner _winner;
-    //public Dictionary<string, Ship> playerShips; 
-    //public DefaultNamespace.Statee State = DefaultNamespace.Statee.Start;
-    void Start()
+
+    private BattleController.Winner _winner;
+
+    private void Start()
     {
         //TODO: временно PLACEMENT, должно быть MAINMENU
-        OnStateSwitch(GameState.Placement);
+        OnStateSwitch(GameState.Mainmenu);
         GameObject
             .FindGameObjectWithTag("Placement Controller")
             .GetComponent<PlacementScript>()
@@ -27,14 +26,17 @@ public class GameManager : MonoBehaviour
             .FindGameObjectWithTag("Battle Controller")
             .GetComponent<BattleController>()
             .onGameOverEvent.AddListener(OnGameOver);
+        GameObject
+            .FindGameObjectWithTag("UIManager")
+            .GetComponent<UIManager>()
+            .onPlacementStart.AddListener(OnPlacementStart);
     }
 
-        
-        
-    public void OnStateSwitch(GameState newState)
+
+    private void OnStateSwitch(GameState newState)
     {
-        _stateMachine.CurrentState = newState;
-        switch (_stateMachine.CurrentState)
+        stateMachine.CurrentState = newState;
+        switch (stateMachine.CurrentState)
         {
             case GameState.Mainmenu:
             {
@@ -71,7 +73,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void OnPrepareBattle(List<Ship> ships)
+    private void OnPlacementStart()
+    {
+        OnStateSwitch(GameState.Placement);
+    }
+    
+    private void OnPrepareBattle(List<Ship> ships)
     {
         print("Prepare Battle");
         //playerShips = ships;

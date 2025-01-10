@@ -6,11 +6,10 @@ namespace Battle
 {
     public class EnemyController : MonoBehaviour
     {
-        [SerializeField] public GameObject shipPrefab;
         private List<GameObject> _playerShips;
         public float hitChance = 0.90f;
         public GameObject currentTarget;
-        private List<GameObject> _tiles = new();
+        private readonly List<GameObject> _tiles = new();
         public GameObject rootTileObjectOfPlayerField;
 
 
