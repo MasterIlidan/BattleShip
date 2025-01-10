@@ -1,38 +1,45 @@
-﻿using System;
+﻿using Battle;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
-namespace DefaultNamespace
+public class UIManager : MonoBehaviour
 {
-    public class UIManager : MonoBehaviour
+    public TextMeshProUGUI winnerText;
+    public UnityEvent onPlacementStart;
+    private void OnEnable()
     {
-        public TextMeshProUGUI winnerText;
-        public UnityEvent OnPlacementStart;
-        private void OnEnable()
-        {
-            GameObject.FindGameObjectWithTag("Battle Controller")
-                .GetComponent<BattleController>().OnGameOverEvent.AddListener(SetWinner);
-        }
-
-        public void OnStartGameButtonClicked()
-        {
-            OnPlacementStart.Invoke();
-        }
-
-        private void SetWinner(BattleController.Winner winner)
-        {
-            if (winner.isPlayerWinner)
-            {
-                winnerText.text = "Вы выиграли!";
-                winnerText.color = Color.green;
-            }
-            else
-            {
-                winnerText.text = "Вы проиграли!";
-                winnerText.color = Color.red;
-            }
-        }
-        
+        GameObject.FindGameObjectWithTag("Battle Controller")
+            .GetComponent<BattleController>().onGameOverEvent.AddListener(SetWinner);
     }
+
+    public void OnStartGameButtonClicked()
+    {
+        onPlacementStart.Invoke();
+    }
+    public void OnExitGameButtonClicked()
+    {
+        Application.Quit();
+    }
+
+    public void OnRestartGameButtonClicked()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    private void SetWinner(BattleController.Winner winner)
+    {
+        if (winner.IsPlayerWinner)
+        {
+            winnerText.text = "Вы выиграли!";
+            winnerText.color = Color.green;
+        }
+        else
+        {
+            winnerText.text = "Вы проиграли!";
+            winnerText.color = Color.red;
+        }
+    }
+        
 }

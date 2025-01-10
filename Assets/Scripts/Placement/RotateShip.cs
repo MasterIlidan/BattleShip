@@ -1,34 +1,37 @@
-using Placement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class RotateShip : MonoBehaviour
+namespace Placement
 {
-    GameObject ship;
-    public GameObject RotateButton;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class RotateShip : MonoBehaviour
     {
-        RotateButton.SetActive(false);
-    }
+        private GameObject _ship;
+        [FormerlySerializedAs("RotateButton")] public GameObject rotateButton;
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+            rotateButton.SetActive(false);
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (!ship) return;
-        RotateButton.transform.position = new Vector2(
-            ship.transform.position.x + 1.5f,
-            ship.transform.position.y + 1.5f);
-    }
+        // Update is called once per frame
+        void Update()
+        {
+            if (!_ship) return;
+            rotateButton.transform.position = new Vector2(
+                _ship.transform.position.x + 1.5f,
+                _ship.transform.position.y + 1.5f);
+        }
 
-    public void OnClick()
-    {
-        ship.GetComponent<CaterScript>().OnRotate();
-    }
+        public void OnClick()
+        {
+            _ship.GetComponent<CaterScript>().OnRotate();
+        }
     
-    //При клике на корабль посылается сообщение в объект RotateButtonSwitch
-    void ChangeActiveShip(GameObject ship)
-    {
-        RotateButton.SetActive(true);
-        this.ship = ship;
+        //При клике на корабль посылается сообщение в объект RotateButtonSwitch
+        void ChangeActiveShip(GameObject ship)
+        {
+            rotateButton.SetActive(true);
+            this._ship = ship;
+        }
     }
 }

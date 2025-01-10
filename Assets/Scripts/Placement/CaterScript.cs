@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Placement
 {
     public class CaterScript : MonoBehaviour
-    { [FormerlySerializedAs("_colliders")] public List<string> shipTilesList = new List<string>();
-        public List<string> shipCollisions = new List<string>();
-        public int ShipSize;
+    { 
+        public List<string> shipTilesList = new ();
+        public int shipSize;
         
-        public bool IsMoving = true;
+        public bool isMoving = true;
         private SpriteRenderer _statusSprite;
         public void OnMouseDrag()
         {
@@ -48,10 +47,10 @@ namespace Placement
             int colliderCount = GetComponent<Rigidbody2D>().GetContacts(col);
             
             
-            if (colliderCount != ShipSize || shipTilesList.Count != ShipSize)
+            if (colliderCount != shipSize || shipTilesList.Count != shipSize)
             {
                 shipTilesList.Clear();
-                print("ship size " + ShipSize + " and colliders " + colliderCount +" mismatch");
+                print("ship size " + shipSize + " and colliders " + colliderCount +" mismatch");
                 return;
             }
 
@@ -61,8 +60,8 @@ namespace Placement
 
         private void SetIsMoving(bool value)
         {
-            IsMoving = value;
-            if (IsMoving)
+            isMoving = value;
+            if (isMoving)
             {
                 _statusSprite.enabled = true;
             }
@@ -83,7 +82,7 @@ namespace Placement
 
         void OnTriggerExit2D(Collider2D collision)
         {
-            if (!IsMoving) return;
+            if (!isMoving) return;
             //print("ship exit tile " + collision.gameObject.name);
             if (collision.gameObject.CompareTag("Tiles"))
             {
@@ -97,7 +96,7 @@ namespace Placement
         }
         void OnTriggerEnter2D(Collider2D collision)
         {
-            if (!IsMoving) return;
+            if (!isMoving) return;
             //print("ship collide with " + collision.gameObject.name);
             if (!collision.gameObject.CompareTag("Tiles")) return;
             if (!shipTilesList.Contains(collision.gameObject.name))
@@ -109,7 +108,7 @@ namespace Placement
 
         void OnTriggerStay2D(Collider2D collision)
         {
-            if (!IsMoving) return;
+            if (!isMoving) return;
             if (collision.gameObject.CompareTag("Ship") ||
                 collision.gameObject.CompareTag("Ship Collision"))
             {

@@ -1,39 +1,35 @@
-using System;
 using UnityEngine;
 
-public class TurnMarkScript : MonoBehaviour
+namespace Battle
 {
-    private Vector2[] markPos =
+    public class TurnMarkScript : MonoBehaviour
     {
-        new Vector2(-4, 4.88f),
-        new Vector2(4, 4.88f)
-    };
+        private readonly Vector2[] _markPos =
+        {
+            new Vector2(-4, 4.88f),
+            new Vector2(4, 4.88f)
+        };
+
+        void OnEnable()
+        {
+            GameObject.FindGameObjectWithTag("Battle Controller").GetComponent<BattleController>().onChangeTurn.AddListener(OnChangePlayerTurn);
+        }
+
+        void OnDisable()
+        {
+            GameObject.FindGameObjectWithTag("Battle Controller").GetComponent<BattleController>().onChangeTurn.RemoveListener(OnChangePlayerTurn);
+        }
+
+        public void OnChangePlayerTurn(bool isPlayerTurn)
+        {
+            int turn = isPlayerTurn ? (int)MarkPosition.Player : (int)MarkPosition.Enemy;
+            transform.position = _markPos[turn];
+        }
+
+        enum MarkPosition
+        {
+            Enemy = 0, Player = 1 
+        }
     
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
     }
-
-    void OnEnable()
-    {
-        GameObject.FindGameObjectWithTag("Battle Controller").GetComponent<BattleController>().OnChangeTurn.AddListener(OnChangePlayerTurn);
-    }
-
-    void OnDisable()
-    {
-        GameObject.FindGameObjectWithTag("Battle Controller").GetComponent<BattleController>().OnChangeTurn.RemoveListener(OnChangePlayerTurn);
-    }
-
-    public void OnChangePlayerTurn(bool isPlayerTurn)
-    {
-        int turn = isPlayerTurn ? (int)MarkPosition.PLAYER : (int)MarkPosition.ENEMY;
-        transform.position = markPos[turn];
-    }
-
-    enum MarkPosition
-    {
-        ENEMY = 0, PLAYER = 1 
-    }
-    
 }

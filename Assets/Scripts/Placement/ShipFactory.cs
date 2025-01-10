@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,7 +6,7 @@ using UnityEngine.Serialization;
 public class ShipFactory : MonoBehaviour
 {
     private int _count;
-    public string ShipName;
+    [FormerlySerializedAs("ShipName")] public string shipName;
     private int _counter = 1;
     private static Dictionary<string, GameObject> _tiles = new ();
     public GameObject tilesRoot;
@@ -51,12 +49,12 @@ public class ShipFactory : MonoBehaviour
             return;
         }
         Count--;
-        char randomLetter = (char) UnityEngine.Random.Range('A', 'K');
-        int randomNumber = UnityEngine.Random.Range(1, 11);
+        char randomLetter = (char) Random.Range('A', 'K');
+        int randomNumber = Random.Range(1, 11);
         GameObject newShip = Instantiate(shipPrefab, 
             _tiles[randomLetter.ToString()+randomNumber.ToString()].transform.position, 
             Quaternion.identity);
-        newShip.name = ShipName + _counter++;
+        newShip.name = shipName + _counter++;
         newShip.transform.SetParent(GameObject.Find("Ships").transform);
         print("Ship SPAWNED");
     }

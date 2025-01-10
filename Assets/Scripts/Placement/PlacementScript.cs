@@ -1,28 +1,27 @@
 using System;
 using System.Collections.Generic;
-using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Placement
 {
     public class PlacementScript : MonoBehaviour
     {
-        public List<Ship> PlacedShips = new();
+        public List<Ship> placedShips = new();
 
-        //public BattleStartEvent BattleStartEvent;
-        public UnityEvent<List<Ship>> BattleStartEvent;
-        [SerializeField] public GameObject One;
-        [SerializeField] public GameObject Double;
-        [SerializeField] public GameObject Triple;
-        [SerializeField] public GameObject Quadro;
+        public UnityEvent<List<Ship>> battleStartEvent;
+        [FormerlySerializedAs("One")] [SerializeField] public GameObject one;
+        [FormerlySerializedAs("Double")] [SerializeField] public GameObject @double;
+        [FormerlySerializedAs("Triple")] [SerializeField] public GameObject triple;
+        [FormerlySerializedAs("Quadro")] [SerializeField] public GameObject quadro;
 
 
         public void OnClickStartGame()
         {
-            PlacedShips.Clear();
+            placedShips.Clear();
             OnPrepareGameStart();
-            BattleStartEvent.Invoke(PlacedShips);
+            battleStartEvent.Invoke(placedShips);
         }
 
         void OnPrepareGameStart()
@@ -36,7 +35,7 @@ namespace Placement
 
             foreach (var ship in ships)
             {
-                var shipSize = ship.GetComponent<CaterScript>().ShipSize;
+                var shipSize = ship.GetComponent<CaterScript>().shipSize;
                 var tiles = ship.GetComponent<CaterScript>().shipTilesList;
                 var shipName = ship.name;
                 if (tiles.Count != shipSize)
@@ -48,22 +47,22 @@ namespace Placement
                 {
                     case 1:
                     {
-                        prefab = One;
+                        prefab = one;
                         break;
                     }
                     case 2:
                     {
-                        prefab = Double;
+                        prefab = @double;
                         break;
                     }
                     case 3:
                     {
-                        prefab = Triple;
+                        prefab = triple;
                         break;
                     }
                     case 4:
                     {
-                        prefab = Quadro;
+                        prefab = quadro;
                         break;
                     }
                     default:
@@ -106,7 +105,7 @@ namespace Placement
                 Ship newShipScript = newShip.GetComponent<Ship>();
                 CaterScript caterScript = ship.GetComponent<CaterScript>();
 
-                newShipScript.setup(shipName, caterScript.ShipSize, true);
+                newShipScript.Setup(shipName, caterScript.shipSize, true);
             }
         }
 
@@ -126,7 +125,7 @@ namespace Placement
                     playerShip.transform.position - offset,
                     Quaternion.identity);
                 //enemyShip.SetActive(false);
-                enemyShip.GetComponent<Ship>().setup(playerShipScript, false);
+                enemyShip.GetComponent<Ship>().Setup(playerShipScript, false);
                 print("copy player ship " + enemyShip.name + " to enemy field");
 
                 enemyShip.transform.SetParent(enemyShips.transform);

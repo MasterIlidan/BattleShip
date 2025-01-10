@@ -1,4 +1,3 @@
-using DefaultNamespace;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour
@@ -7,7 +6,7 @@ public class CameraScript : MonoBehaviour
     void Start()
     {
         cameraPos = new(-58f, 0f, -10f);
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnCameraPosChanged.AddListener(SetNewCameraPos);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().onCameraPosChanged.AddListener(SetNewCameraPos);
     }
 
     // Update is called once per frame

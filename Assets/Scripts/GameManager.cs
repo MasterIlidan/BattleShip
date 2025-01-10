@@ -1,93 +1,88 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Battle;
 using Placement;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using StateMachine = DefaultNamespace.StateMachine;
 
-namespace DefaultNamespace
+public class GameManager : MonoBehaviour
 {
-    public class GameManager : MonoBehaviour
+    private StateMachine _stateMachine;
+    public UnityEvent<GameState> onStateChanged;
+    public UnityEvent<Vector3> onCameraPosChanged;
+        
+    BattleController.Winner _winner;
+    //public Dictionary<string, Ship> playerShips; 
+    //public DefaultNamespace.Statee State = DefaultNamespace.Statee.Start;
+    void Start()
     {
-        [SerializeField]
-        public StateMachine _stateMachine;
-        public UnityEvent<GameState> OnStateChanged;
-        public UnityEvent<Vector3> OnCameraPosChanged;
-        
-        BattleController.Winner _winner;
-        //public Dictionary<string, Ship> playerShips; 
-        //public DefaultNamespace.Statee State = DefaultNamespace.Statee.Start;
-        void Start()
-        {
-            //TODO: временно PLACEMENT, должно быть MAINMENU
-            OnStateSwitch(GameState.PLACEMENT);
-            GameObject
-                .FindGameObjectWithTag("Placement Controller")
-                .GetComponent<PlacementScript>()
-                .BattleStartEvent.AddListener(OnPrepareBattle);
-            GameObject
-                .FindGameObjectWithTag("Battle Controller")
-                .GetComponent<BattleController>()
-                .OnGameOverEvent.AddListener(OnGameOver);
-        }
+        //TODO: временно PLACEMENT, должно быть MAINMENU
+        OnStateSwitch(GameState.Placement);
+        GameObject
+            .FindGameObjectWithTag("Placement Controller")
+            .GetComponent<PlacementScript>()
+            .battleStartEvent.AddListener(OnPrepareBattle);
+        GameObject
+            .FindGameObjectWithTag("Battle Controller")
+            .GetComponent<BattleController>()
+            .onGameOverEvent.AddListener(OnGameOver);
+    }
 
         
         
-        public void OnStateSwitch(GameState newState)
+    public void OnStateSwitch(GameState newState)
+    {
+        _stateMachine.CurrentState = newState;
+        switch (_stateMachine.CurrentState)
         {
-            _stateMachine.CurrentState = newState;
-            switch (_stateMachine.CurrentState)
+            case GameState.Mainmenu:
             {
-                case GameState.MAINMENU:
-                {
-                    print("Main Menu");
-                    OnCameraPosChanged.Invoke(new Vector3(-58f, 0f, -10f));
-                    OnStateChanged?.Invoke(GameState.MAINMENU);
-                    break;
-                }
-                case GameState.PLACEMENT:
-                {
-                    print("Placement");
-                    OnCameraPosChanged?.Invoke(new Vector3(-29f, 0f, -10f));
-                    OnStateChanged?.Invoke(GameState.PLACEMENT);
-                    break;
-                }
-                case GameState.BATTLE:
-                {
-                    print("Battle");
-                    OnCameraPosChanged?.Invoke(new Vector3(0f, 0f, -10f)); 
-                    OnStateChanged?.Invoke(GameState.BATTLE);
-                    break;
-                }
-                case GameState.ENDGAME:
-                {
-                    OnCameraPosChanged?.Invoke(new Vector3(29f, 0f, -10f));
-                    OnStateChanged?.Invoke(GameState.ENDGAME);
-                    print("End Game");
-                    break;
-                }
-                default:
-                {
-                    throw new UnexpectedEnumValueException<GameState>(newState);
-                }
+                print("Main Menu");
+                onCameraPosChanged.Invoke(new Vector3(-58f, 0f, -10f));
+                onStateChanged?.Invoke(GameState.Mainmenu);
+                break;
             }
-        }
-
-        public void OnPrepareBattle(List<Ship> ships)
-        {
-            print("Prepare Battle");
-            //playerShips = ships;
-            //TODO: временное копирование всего расположения кораблей игрока как 
-            
-            OnStateSwitch(GameState.BATTLE);
-        }
-
-        private void OnGameOver(BattleController.Winner winner)
-        {
-            print("Game Over");
-            OnStateSwitch(GameState.ENDGAME);
+            case GameState.Placement:
+            {
+                print("Placement");
+                onCameraPosChanged?.Invoke(new Vector3(-29f, 0f, -10f));
+                onStateChanged?.Invoke(GameState.Placement);
+                break;
+            }
+            case GameState.Battle:
+            {
+                print("Battle");
+                onCameraPosChanged?.Invoke(new Vector3(0f, 0f, -10f)); 
+                onStateChanged?.Invoke(GameState.Battle);
+                break;
+            }
+            case GameState.Endgame:
+            {
+                onCameraPosChanged?.Invoke(new Vector3(29f, 0f, -10f));
+                onStateChanged?.Invoke(GameState.Endgame);
+                print("End Game");
+                break;
+            }
+            default:
+            {
+                throw new UnexpectedEnumValueException<GameState>(newState);
+            }
         }
     }
 
-    
+    public void OnPrepareBattle(List<Ship> ships)
+    {
+        print("Prepare Battle");
+        //playerShips = ships;
+        //TODO: временное копирование всего расположения кораблей игрока как 
+            
+        OnStateSwitch(GameState.Battle);
+    }
+
+    private void OnGameOver(BattleController.Winner winner)
+    {
+        print("Game Over");
+        OnStateSwitch(GameState.Endgame);
+    }
 }

@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using DefaultNamespace;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Battle
@@ -9,22 +7,21 @@ namespace Battle
     public class EnemyController : MonoBehaviour
     {
         [SerializeField] public GameObject shipPrefab;
-        private List<GameObject> playerShips;
+        private List<GameObject> _playerShips;
         public float hitChance = 0.90f;
         public GameObject currentTarget;
         private List<GameObject> _tiles = new();
         public GameObject rootTileObjectOfPlayerField;
 
-        private volatile bool isPlayerTurn = true;
 
         private void OnEnable()
         {
             GameObject.FindGameObjectWithTag("Battle Controller")
-                .GetComponent<BattleController>().OnChangeTurn.AddListener(OnEnemyTurn);
+                .GetComponent<BattleController>().onChangeTurn.AddListener(OnEnemyTurn);
             GameObject.FindGameObjectWithTag("Battle Controller")
-                .GetComponent<BattleController>().OnShipDestroyedEvent.AddListener(OnPlayerShipDestroyed);
+                .GetComponent<BattleController>().onShipDestroyedEvent.AddListener(OnPlayerShipDestroyed);
             GameObject.FindGameObjectWithTag("GameController")
-                .GetComponent<GameManager>().OnStateChanged.AddListener(OnStateChanged);
+                .GetComponent<GameManager>().onStateChanged.AddListener(OnStateChanged);
             
         }
 
@@ -36,12 +33,12 @@ namespace Battle
         private void OnDisable()
         {
             GameObject.FindGameObjectWithTag("GameController")
-                .GetComponent<GameManager>().OnStateChanged.RemoveListener(OnStateChanged);
+                .GetComponent<GameManager>().onStateChanged.RemoveListener(OnStateChanged);
         }
 
         private void OnStateChanged(GameState state)
         {
-            if (state != GameState.BATTLE) return;
+            if (state != GameState.Battle) return;
             GameObject playerShipsCollectionGameObject
                 = GameObject.Find("PlayerShips");
             List<GameObject> playerShipsCollection = new();
@@ -51,7 +48,7 @@ namespace Battle
                 playerShipsCollection.Add(playerShipsCollectionGameObject.transform.GetChild(i).gameObject);
             }
 
-            playerShips = playerShipsCollection;
+            _playerShips = playerShipsCollection;
             //собрать все плитки с поля игрока
             for (int i = 0; i < rootTileObjectOfPlayerField.transform.childCount; i++)
             {
@@ -60,14 +57,6 @@ namespace Battle
 
 
         }
-
-        private void OnChangeTurn(bool isPlayerTurn)
-        {
-            this.isPlayerTurn = isPlayerTurn;
-            
-        }
-        
-
 
         void OnEnemyTurn(bool isPlayerTurn)
         {
@@ -121,7 +110,7 @@ namespace Battle
             {
                 GameObject obj = o.transform.GetChild(i).gameObject;
                 ShipHitScript shipHitScript = obj.GetComponent<ShipHitScript>();
-                obj.TryGetComponent<BoxCollider2D>(out BoxCollider2D boxCollider);
+                obj.TryGetComponent(out BoxCollider2D boxCollider);
                 if (boxCollider == null) continue;
                 if (obj.name == "DamagedSprite" &
                     shipHitScript != null &
@@ -133,14 +122,14 @@ namespace Battle
                 }
             }
 
-            playerShips.Remove(o);
+            _playerShips.Remove(o);
             currentTarget = null;
         }
 
         private GameObject ChooseTarget()
         {
-            int randomIndex = Random.Range(0, playerShips.Count);
-            GameObject playerShip = playerShips[randomIndex];
+            int randomIndex = Random.Range(0, _playerShips.Count);
+            GameObject playerShip = _playerShips[randomIndex];
             return playerShip;
         }
     }
