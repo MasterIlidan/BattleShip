@@ -13,6 +13,7 @@ public class Ship : MonoBehaviour
 
     public UnityEvent<Ship> OnShipDestroyed;
     public UnityEvent<Ship> OnShipDamaged;
+    
     public Ship(string name, int shipSize)
     {
         _name = name;
@@ -22,7 +23,8 @@ public class Ship : MonoBehaviour
 
     void OnEnable()
     {
-        GameObject.FindGameObjectWithTag("Battle Controller").GetComponent<BattleController>().OnChangeTurn.AddListener(OnTurnChange);
+        GameObject.FindGameObjectWithTag("Battle Controller").GetComponent<BattleController>().OnChangeTurn
+            .AddListener(OnTurnChange);
         for (int i = 0; i < transform.childCount; i++)
         {
             if (transform.GetChild(i).TryGetComponent(typeof(BoxCollider2D), out var boxCollider2DComponent))
@@ -39,25 +41,27 @@ public class Ship : MonoBehaviour
 
     public void OnHit(ShipHitScript hitObject)
     {
-        if (isPlayerTurn)
+        _hitPoints--;
+        hitObject.isHitFlag = true;
+        DisableHitMark(hitObject.gameObject);
+        if (_hitPoints != 0)
         {
-            _hitPoints--;
-            hitObject.isHitFlag = true;
-            if (_hitPoints != 0)
-            {
-                print("You hit the ship!");
-                hitObject.gameObject.GetComponent<SpriteRenderer>().enabled = true;
-                hitObject.gameObject.GetComponent<BoxCollider2D>().enabled = false;
-                OnShipDamaged.Invoke(this);
-                return;
-            }
-            print("Ship destroyed");
-            hitObject.gameObject.transform.parent.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
-            OnShipDestroyed.Invoke(this);
+            print("You hit the ship!");
+            OnShipDamaged.Invoke(this);
             return;
         }
-        print("not player turn");
+
+        print("Ship destroyed");
+        hitObject.gameObject.transform.parent.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+        OnShipDestroyed.Invoke(this);
     }
+
+    private void DisableHitMark(GameObject hitObject)
+    {
+        hitObject.gameObject.GetComponent<SpriteRenderer>().enabled = true;
+        hitObject.gameObject.GetComponent<BoxCollider2D>().enabled = false;
+    }
+
     public void setup(Ship shipScript, bool isPlayerShip)
     {
         _name = shipScript._name;

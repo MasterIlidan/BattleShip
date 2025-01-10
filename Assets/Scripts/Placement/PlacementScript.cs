@@ -29,7 +29,10 @@ namespace Placement
         {
             GameObject[] ships = GameObject.FindGameObjectsWithTag("Ship");
 
-            Vector3 difference = new Vector3(-37.0063f, 0.066f, 0f);
+
+            List<string> shipNames = new();
+            List<GameObject> shipsToInstantiate = new();
+            List<GameObject> prefabList = new();
 
             foreach (var ship in ships)
             {
@@ -67,11 +70,32 @@ namespace Placement
                         throw new ArgumentOutOfRangeException(nameof(shipSize),
                             "Illegal ship size: " + shipSize + " in " + ship.name);
                 }
-
+                
                 foreach (var tile in tiles)
                 {
                     shipName += tile;
                 }
+                
+                prefabList.Add(prefab);
+                shipsToInstantiate.Add(ship);
+                shipNames.Add(shipName);
+            }
+            InstantiateShips(shipsToInstantiate,
+                prefabList,
+                shipNames);
+            SetEnemyShips();
+        }
+
+        private void InstantiateShips(List<GameObject> ships,
+            List<GameObject> prefabList,
+            List<string> namesList)
+        {
+            Vector3 difference = new Vector3(-37.0063f, 0.066f, 0f);
+            for (int i = 0; i < ships.Count; i++)
+            {
+                var ship = ships[i];
+                var prefab = prefabList[i];
+                var shipName = namesList[i];
 
                 GameObject newShip = Instantiate(prefab,
                     ship.transform.position - difference,
@@ -84,8 +108,6 @@ namespace Placement
 
                 newShipScript.setup(shipName, caterScript.ShipSize, true);
             }
-
-            SetEnemyShips();
         }
 
         private void SetEnemyShips()
