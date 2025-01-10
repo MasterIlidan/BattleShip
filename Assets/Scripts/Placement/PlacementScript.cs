@@ -89,21 +89,21 @@ namespace Placement
             List<GameObject> prefabList,
             List<string> namesList)
         {
-            Vector3 difference = new Vector3(-37.0063f, 0.066f, 0f);
-            for (int i = 0; i < ships.Count; i++)
+            var difference = new Vector3(-37.0063f, 0.066f, 0f);
+            for (var i = 0; i < ships.Count; i++)
             {
                 var ship = ships[i];
                 var prefab = prefabList[i];
                 var shipName = namesList[i];
 
-                GameObject newShip = Instantiate(prefab,
+                var newShip = Instantiate(prefab,
                     ship.transform.position - difference,
                     ship.transform.rotation);
                 newShip.transform.SetParent(GameObject.FindGameObjectWithTag("Player Ships").transform);
                 newShip.name = shipName;
 
-                Ship newShipScript = newShip.GetComponent<Ship>();
-                CaterScript caterScript = ship.GetComponent<CaterScript>();
+                var newShipScript = newShip.GetComponent<Ship>();
+                var caterScript = ship.GetComponent<CaterScript>();
 
                 newShipScript.Setup(shipName, caterScript.shipSize, true);
             }
@@ -111,32 +111,34 @@ namespace Placement
 
         private void SetEnemyShips()
         {
-            Vector3 offset = new Vector3(7.996694f, 0f, 0f);
-            GameObject playerShips = GameObject.FindGameObjectWithTag("Player Ships");
-            GameObject enemyShips = GameObject.FindGameObjectWithTag("Enemy Ships");
+            var offset = new Vector3(7.996694f, 0f, 0f);
+            var playerShips = GameObject.FindGameObjectWithTag("Player Ships");
+            var enemyShips = GameObject.FindGameObjectWithTag("Enemy Ships");
 
-            for (int i = 0; i < playerShips.transform.childCount; i++)
+            for (var i = 0; i < playerShips.transform.childCount; i++)
             {
-                GameObject playerShip = playerShips.transform.GetChild(i).gameObject;
-                Ship playerShipScript = playerShip.GetComponent<Ship>();
+                var playerShip = playerShips.transform.GetChild(i).gameObject;
+                var playerShipScript = playerShip.GetComponent<Ship>();
 
 
-                GameObject enemyShip = Instantiate(playerShip,
+                var enemyShip = Instantiate(playerShip,
                     playerShip.transform.position - offset,
                     Quaternion.identity);
                 //enemyShip.SetActive(false);
                 enemyShip.GetComponent<Ship>().Setup(playerShipScript, false);
                 print("copy player ship " + enemyShip.name + " to enemy field");
-
+                for (int j = 0; j < enemyShip.transform.childCount; j++)
+                {
+                    var obj = enemyShip.transform.GetChild(j).gameObject;
+                    if (obj.name != "ShipSprite") continue;
+                    obj.GetComponent<SpriteRenderer>().enabled = false;
+                    return;
+                }
                 enemyShip.transform.SetParent(enemyShips.transform);
                 //enemyShip.SetActive(true);
             }
 
             enemyShips.transform.rotation = new Quaternion(0f, 0f, 90f, 0f);
         }
-    }
-
-    public class BattleStartEvent : UnityEvent<Dictionary<string, Ship>>
-    {
     }
 }
