@@ -8,11 +8,11 @@ using UnityEngine.Events;
 public class BattleController : MonoBehaviour
 {
     Dictionary<string, Ship> playerShips = new ();
-    Dictionary<string, Ship> enemyShips = new ();
+    List<Ship> enemyShips = new ();
     public GameManager gameManager;
     
     public UnityEvent<bool> OnChangeTurn;
-    
+    public UnityEvent<Ship> OnShipDestroyedEvent;
     
     bool isPlayerTurn = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -56,13 +56,17 @@ public class BattleController : MonoBehaviour
     void OnSetupBattleField()
     {
         playerShips = GameObject.FindGameObjectWithTag("Placement Controller").GetComponent<PlacementScript>().PlacedShips;
-        //TODO: временно корабли противника имеют точно такое же расположение
-        //enemyShips = playerShips;
         foreach (var ship in playerShips.Values)
         {
             ship.OnShipDestroyed.AddListener(OnShipDestroyed);
             ship.OnShipDamaged.AddListener(OnShipDamaged);
         }
+        GameObject enemyShipsCollection = GameObject.Find("EnemyShips");
+        for (int i = 0; i < enemyShipsCollection.transform.childCount; i++)
+        {
+            enemyShips.Add(enemyShipsCollection.transform.GetChild(i).gameObject.GetComponent<Ship>());
+        }
+        
         GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().OnStateChanged.AddListener(OnStateChanged);
     }
 

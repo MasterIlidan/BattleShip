@@ -82,7 +82,7 @@ namespace Placement
                 Ship newShipScript = newShip.GetComponent<Ship>();
                 CaterScript caterScript = ship.GetComponent<CaterScript>();
 
-                newShipScript.setup(shipName, caterScript.ShipSize);
+                newShipScript.setup(shipName, caterScript.ShipSize, true);
             }
 
             SetEnemyShips();
@@ -104,7 +104,7 @@ namespace Placement
                     playerShip.transform.position - offset,
                     Quaternion.identity);
                 //enemyShip.SetActive(false);
-                enemyShip.GetComponent<Ship>().setup(playerShipScript);
+                enemyShip.GetComponent<Ship>().setup(playerShipScript, false);
                 print("copy player ship " + enemyShip.name + " to enemy field");
 
                 enemyShip.transform.SetParent(enemyShips.transform);

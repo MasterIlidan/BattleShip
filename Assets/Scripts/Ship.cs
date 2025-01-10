@@ -8,6 +8,7 @@ public class Ship : MonoBehaviour
     private int _shipSize { get; set; }
 
     private bool isPlayerTurn;
+    private bool isPlayerShip;
     private int _hitPoints { get; set; }
 
     public UnityEvent<Ship> OnShipDestroyed;
@@ -56,18 +57,20 @@ public class Ship : MonoBehaviour
         }
         print("not player turn");
     }
-    public void setup(Ship shipScript)
+    public void setup(Ship shipScript, bool isPlayerShip)
     {
         _name = shipScript._name;
         _shipSize = shipScript._shipSize;
         _hitPoints = _shipSize;
+        this.isPlayerShip = isPlayerShip;
     }
 
-    public void setup(string name, int shipSize)
+    public void setup(string name, int shipSize, bool isPlayerShip)
     {
         _name = name;
         _shipSize = shipSize;
         _hitPoints = _shipSize;
+        this.isPlayerShip = isPlayerShip;
     }
         
 }
